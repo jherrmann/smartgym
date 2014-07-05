@@ -17,7 +17,9 @@
 {
     // *accelerometerDataArray;
     BOOL insideRep;
-    int reps;
+    int reps1;
+    int reps2;
+    int reps3;
     int sets;
     NSDate *setTimer;
 }
@@ -27,34 +29,23 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     [self setupAccelerometerAndGyro];
-    // send the data to the server
-    [self sendSessionData:9]; // TODO: Replace with data from accelerometer
 }
 
 -(void)setupAccelerometerAndGyro
 {
-    currentMaxAccelX = 0;
-    currentMaxAccelY = 0;
-    currentMaxAccelZ = 0;
-    
-    currentMaxRotX = 0;
-    currentMaxRotY = 0;
-    currentMaxRotZ = 0;
-    
     self.motionManager = [[CMMotionManager alloc] init];
     self.motionManager.accelerometerUpdateInterval = .2;
     self.motionManager.gyroUpdateInterval = .2;
     
     //accelerometerDataArray = [[NSMutableArray alloc] init];
     insideRep = NO;
-    reps = 0;
+    reps1 = 0;
+    reps2 = 0;
+    reps3 = 0;
     sets = 0;
     
-    // tell montion manager to start sending acceleration updates
+    // tell motion manager to start sending acceleration updates
     [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
-        
-        // output data
-        [self outputAccelertionData:accelerometerData.acceleration];
         
         // analyse data for rep
         [self countRep:accelerometerData.acceleration];
@@ -62,21 +53,10 @@
         // analyse data if a new exercise starts and rest reps and sets
         [self checkAndStartNewExercise:accelerometerData.acceleration];
         
-        // add accelerometer data to array
-        //[accelerometerDataArray addObject:accelerometerData];
-        
-        //NSLog(@"X: %f Y: %f Z: %f", accelerometerData.acceleration.x, accelerometerData.acceleration.y, accelerometerData.acceleration.z);
-        
         if(error){
             NSLog(@"%@", error);
         }
     }];
-    
-    [self.motionManager startGyroUpdatesToQueue:[NSOperationQueue currentQueue]
-                                    withHandler:^(CMGyroData *gyroData, NSError *error) {
-                                        [self outputRotationData:gyroData.rotationRate];
-                                    }];
-
 }
 
 - (void)countRep:(CMAcceleration)acceleration
@@ -90,11 +70,7 @@
             // if 10 seconds have past since last Rep, assume that a new set is starting
             if([setTimer timeIntervalSinceNow]<-10.0)
                {
-                   reps = 0;
                    sets++;
-                   // update gui
-                   self.repsCounter.text = [NSString stringWithFormat:@" %d", reps];
-                   self.setsCounter.text = [NSString stringWithFormat:@" %d", sets];
                }
         }
 
@@ -103,33 +79,46 @@
     else if(insideRep && acceleration.z <= -0.98)
     {
         insideRep = NO;
-        reps++;
-        // start and reset timeinterval to figure out if a new set is startet
+        if (sets == 0) reps1++;
+        if (sets == 1) reps2++;
+        if (sets == 2) reps3++;
+        
+        // send the latest data to the server
+        [self postData];
+        
+        // start and reset time interval to figure out if a new set is started
         setTimer = [NSDate date];
+        
         // update gui
-        self.repsCounter.text = [NSString stringWithFormat:@" %d", reps];
-
+        self.reps1Counter.text = [NSString stringWithFormat:@" %d", reps1];
+        self.reps2Counter.text = [NSString stringWithFormat:@" %d", reps2];
+        self.reps3Counter.text = [NSString stringWithFormat:@" %d", reps3];
     }
 }
 
 - (void)checkAndStartNewExercise:(CMAcceleration)acceleration
 {
-    if (acceleration.x >= 1) {
-        // start new exercise rest all data
-        reps = 0;
+    if (acceleration.x >= 1)
+    {
+        // start new exercise reset all data
+        reps1 = 0;
+        reps2 = 0;
+        reps3 = 0;
         sets = 0;
+        
         // update gui
-        self.repsCounter.text = [NSString stringWithFormat:@" %d", reps];
-        self.setsCounter.text = [NSString stringWithFormat:@" %d", sets];
+        self.reps1Counter.text = [NSString stringWithFormat:@" %d", reps1];
+        self.reps2Counter.text = [NSString stringWithFormat:@" %d", reps2];
+        self.reps3Counter.text = [NSString stringWithFormat:@" %d", reps3];
     }
 }
 
-- (void)sendSessionData:(int)numberOfReps
+- (void)postData
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     
-    NSDictionary *params = @ {@"reps":[NSNumber numberWithInteger:numberOfReps]};
+    NSDictionary *params = @ {@"set1":[NSNumber numberWithInteger:reps1], @"set2":[NSNumber numberWithInteger:reps2], @"set3":[NSNumber numberWithInteger:reps3]};
     
     [manager POST:@"http://www.gymbot.me/reps.json" parameters:params
           success:^(AFHTTPRequestOperation *operation, id responseObject)
@@ -142,67 +131,10 @@
      }];
 }
 
--(void)outputAccelertionData:(CMAcceleration)acceleration
-{
-    self.accX.text = [NSString stringWithFormat:@" %.2fg",acceleration.x];
-    if(fabs(acceleration.x) > fabs(currentMaxAccelX))
-    {
-        currentMaxAccelX = acceleration.x;
-    }
-    self.accY.text = [NSString stringWithFormat:@" %.2fg",acceleration.y];
-    if(fabs(acceleration.y) > fabs(currentMaxAccelY))
-    {
-        currentMaxAccelY = acceleration.y;
-    }
-    self.accZ.text = [NSString stringWithFormat:@" %.2fg",acceleration.z];
-    if(fabs(acceleration.z) > fabs(currentMaxAccelZ))
-    {
-        currentMaxAccelZ = acceleration.z;
-    }
-    
-    self.maxAccX.text = [NSString stringWithFormat:@" %.2f",currentMaxAccelX];
-    self.maxAccY.text = [NSString stringWithFormat:@" %.2f",currentMaxAccelY];
-    self.maxAccZ.text = [NSString stringWithFormat:@" %.2f",currentMaxAccelZ];
-
-    
-}
--(void)outputRotationData:(CMRotationRate)rotation
-{
-    self.rotX.text = [NSString stringWithFormat:@" %.2fr/s",rotation.x];
-    if(fabs(rotation.x) > fabs(currentMaxRotX))
-    {
-        currentMaxRotX = rotation.x;
-    }
-    self.rotY.text = [NSString stringWithFormat:@" %.2fr/s",rotation.y];
-    if(fabs(rotation.y) > fabs(currentMaxRotY))
-    {
-        currentMaxRotY = rotation.y;
-    }
-    self.rotZ.text = [NSString stringWithFormat:@" %.2fr/s",rotation.z];
-    if(fabs(rotation.z) > fabs(currentMaxRotZ))
-    {
-        currentMaxRotZ = rotation.z;
-    }
-    
-    self.maxRotX.text = [NSString stringWithFormat:@" %.2f",currentMaxRotX];
-    self.maxRotY.text = [NSString stringWithFormat:@" %.2f",currentMaxRotY];
-    self.maxRotZ.text = [NSString stringWithFormat:@" %.2f",currentMaxRotZ];
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)resetMaxValues:(id)sender {
-    
-    currentMaxAccelX = 0;
-    currentMaxAccelY = 0;
-    currentMaxAccelZ = 0;
-    
-    currentMaxRotX = 0;
-    currentMaxRotY = 0;
-    currentMaxRotZ = 0;
-}
 @end
