@@ -7,6 +7,7 @@
 //
 
 #import "SGViewController.h"
+#import "AFNetworking.h"
 
 @interface SGViewController ()
 
@@ -42,6 +43,27 @@
                                     withHandler:^(CMGyroData *gyroData, NSError *error) {
                                         [self outputRotationData:gyroData.rotationRate];
                                     }];
+
+    // send the data to the server
+    [self sendSessionData:9]; // TODO: Replace with data from accelerometer
+}
+
+- (void)sendSessionData:(int)numberOfReps
+{
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    
+    NSDictionary *params = @ {@"reps":[NSNumber numberWithInteger:numberOfReps]};
+    
+    [manager POST:@"http://www.gymbot.me/reps.json" parameters:params
+          success:^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSLog(@"JSON: %@", responseObject);
+    }
+          failure:
+     ^(AFHTTPRequestOperation *operation, NSError *error) {
+         NSLog(@"Error: %@", error);
+     }];
 }
 
 -(void)outputAccelertionData:(CMAcceleration)acceleration

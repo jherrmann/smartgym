@@ -1,0 +1,8 @@
+.DS_Store
+
+build
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+.sconsign.dblite
+Pods/*.xcodeproj/xcuserdata/
