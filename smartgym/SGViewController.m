@@ -42,8 +42,8 @@
     currentMaxRotZ = 0;
     
     self.motionManager = [[CMMotionManager alloc] init];
-    self.motionManager.accelerometerUpdateInterval = .2;
-    self.motionManager.gyroUpdateInterval = .2;
+    self.motionManager.accelerometerUpdateInterval = .3;
+    self.motionManager.gyroUpdateInterval = .3;
     
     //accelerometerDataArray = [[NSMutableArray alloc] init];
     insideRep = NO;
