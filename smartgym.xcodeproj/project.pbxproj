@@ -204,6 +204,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = JHE;
 				TargetAttributes = {
+					BC7AEDA51967ED0D00E9AE72 = {
+						DevelopmentTeam = C7SE9V2L9Z;
+					};
 					BC7AEDC61967ED0D00E9AE72 = {
 						TestTargetID = BC7AEDA51967ED0D00E9AE72;
 					};
@@ -382,10 +385,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "smartgym/smartgym-Prefix.pch";
 				INFOPLIST_FILE = "smartgym/smartgym-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -397,10 +402,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "smartgym/smartgym-Prefix.pch";
 				INFOPLIST_FILE = "smartgym/smartgym-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

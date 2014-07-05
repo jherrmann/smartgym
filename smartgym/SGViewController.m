@@ -13,6 +13,9 @@
 @end
 
 @implementation SGViewController
+{
+    NSMutableArray *accelerometerDataArray;
+}
 
 - (void)viewDidLoad
 {
@@ -36,9 +39,16 @@
     self.motionManager.accelerometerUpdateInterval = .2;
     self.motionManager.gyroUpdateInterval = .2;
     
+    accelerometerDataArray = [[NSMutableArray alloc] init];
+    
     // tell montion manager to start sending acceleration updates
     [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
         [self outputAccelertionData:accelerometerData.acceleration];
+        
+        // add accelerometer data to array
+        [accelerometerDataArray addObject:accelerometerData];
+        NSLog(@"X: %f Y: %f Z: %f", accelerometerData.acceleration.x, accelerometerData.acceleration.y, accelerometerData.acceleration.z);
+        
         if(error){
             NSLog(@"%@", error);
         }
@@ -104,5 +114,13 @@
 }
 
 - (IBAction)resetMaxValues:(id)sender {
+    
+    currentMaxAccelX = 0;
+    currentMaxAccelY = 0;
+    currentMaxAccelZ = 0;
+    
+    currentMaxRotX = 0;
+    currentMaxRotY = 0;
+    currentMaxRotZ = 0;
 }
 @end
