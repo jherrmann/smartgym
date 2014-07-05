@@ -15,9 +15,11 @@
 
 @implementation SGViewController
 {
-    NSMutableArray *accelerometerDataArray;
+    // *accelerometerDataArray;
     BOOL insideRep;
     int reps;
+    int sets;
+    NSDate *setTimer;
 }
 
 - (void)viewDidLoad
@@ -42,32 +44,24 @@
     self.motionManager.accelerometerUpdateInterval = .2;
     self.motionManager.gyroUpdateInterval = .2;
     
-    accelerometerDataArray = [[NSMutableArray alloc] init];
+    //accelerometerDataArray = [[NSMutableArray alloc] init];
     insideRep = NO;
     reps = 0;
+    sets = 0;
     
     // tell montion manager to start sending acceleration updates
     [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
+        
+        // output data
         [self outputAccelertionData:accelerometerData.acceleration];
         
         // analyse data for rep
-        if(!insideRep && accelerometerData.acceleration.z >= -0.9)
-        {
-            insideRep = YES;
-        }
-        else if(insideRep && accelerometerData.acceleration.z <= -0.98)
-        {
-            insideRep = NO;
-            reps++;
-            self.repsCounter.text = [NSString stringWithFormat:@" %d", reps];
-        }
-            
+        [self countRep:accelerometerData.acceleration];
         
         // add accelerometer data to array
-        [accelerometerDataArray addObject:accelerometerData];
+        //[accelerometerDataArray addObject:accelerometerData];
         
-        
-        NSLog(@"X: %f Y: %f Z: %f", accelerometerData.acceleration.x, accelerometerData.acceleration.y, accelerometerData.acceleration.z);
+        //NSLog(@"X: %f Y: %f Z: %f", accelerometerData.acceleration.x, accelerometerData.acceleration.y, accelerometerData.acceleration.z);
         
         if(error){
             NSLog(@"%@", error);
@@ -81,6 +75,39 @@
 
     // send the data to the server
     [self sendSessionData:9]; // TODO: Replace with data from accelerometer
+}
+
+- (void)countRep:(CMAcceleration)acceleration
+{
+    // if over treshold then rep starts
+    if(!insideRep && acceleration.z >= -0.9)
+    {
+        insideRep = YES;
+        if(setTimer)
+        {
+            // if 10 seconds have past since last Rep, assume that a new set is starting
+            if([setTimer timeIntervalSinceNow]<-10.0)
+               {
+                   reps = 0;
+                   sets++;
+                   // update gui
+                   self.repsCounter.text = [NSString stringWithFormat:@" %d", reps];
+                   self.setsCounter.text = [NSString stringWithFormat:@" %d", sets];
+               }
+        }
+
+    }
+    // if under treshold rep ends
+    else if(insideRep && acceleration.z <= -0.98)
+    {
+        insideRep = NO;
+        reps++;
+        // start and reset timeinterval to figure out if a new set is startet
+        setTimer = [NSDate date];
+        // update gui
+        self.repsCounter.text = [NSString stringWithFormat:@" %d", reps];
+
+    }
 }
 
 - (void)sendSessionData:(int)numberOfReps
