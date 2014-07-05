@@ -59,6 +59,9 @@
         // analyse data for rep
         [self countRep:accelerometerData.acceleration];
         
+        // analyse data if a new exercise starts and rest reps and sets
+        [self checkAndStartNewExercise:accelerometerData.acceleration];
+        
         // add accelerometer data to array
         //[accelerometerDataArray addObject:accelerometerData];
         
@@ -106,6 +109,18 @@
         // update gui
         self.repsCounter.text = [NSString stringWithFormat:@" %d", reps];
 
+    }
+}
+
+- (void)checkAndStartNewExercise:(CMAcceleration)acceleration
+{
+    if (acceleration.x >= 1) {
+        // start new exercise rest all data
+        reps = 0;
+        sets = 0;
+        // update gui
+        self.repsCounter.text = [NSString stringWithFormat:@" %d", reps];
+        self.setsCounter.text = [NSString stringWithFormat:@" %d", sets];
     }
 }
 
