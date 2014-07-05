@@ -22,6 +22,7 @@
     int reps3;
     int sets;
     NSDate *setTimer;
+    NSDate *exerciseTimer;
 }
 
 - (void)viewDidLoad
@@ -47,8 +48,10 @@
     // tell motion manager to start sending acceleration updates
     [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
         
-        // analyse data for rep
-        [self countRep:accelerometerData.acceleration];
+        // analyse data for rep (only call if not a execerise change just happend
+        if (!exerciseTimer || [exerciseTimer timeIntervalSinceNow]<-2) {
+            [self countRep:accelerometerData.acceleration];
+        }
         
         // analyse data if a new exercise starts and rest reps and sets
         [self checkAndStartNewExercise:accelerometerData.acceleration];
@@ -70,6 +73,8 @@
             // if 10 seconds have passed since last rep, assume that a new set is starting
             if([setTimer timeIntervalSinceNow]<-10.0)
                {
+                   // only move to the next set, if reps where done on the previus set
+                   if((reps1>0 && reps2==0) || (reps2>0 && reps3==0))
                    sets++;
                }
         }
@@ -105,6 +110,7 @@
         reps2 = 0;
         reps3 = 0;
         sets = 0;
+        setTimer = [NSDate date];
         
         // update gui
         self.reps1Counter.text = [NSString stringWithFormat:@" %d", reps1];
