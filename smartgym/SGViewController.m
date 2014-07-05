@@ -35,8 +35,8 @@
 -(void)setupAccelerometerAndGyro
 {
     self.motionManager = [[CMMotionManager alloc] init];
-    self.motionManager.accelerometerUpdateInterval = .3;
-    self.motionManager.gyroUpdateInterval = .3;
+    self.motionManager.accelerometerUpdateInterval = .2;
+    self.motionManager.gyroUpdateInterval = .2;
     
     //accelerometerDataArray = [[NSMutableArray alloc] init];
     insideRep = NO;
@@ -49,7 +49,7 @@
     [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
         
         // analyse data for rep (only call if not a execerise change just happend
-        if (!exerciseTimer || [exerciseTimer timeIntervalSinceNow]<-1) {
+        if (!exerciseTimer || [exerciseTimer timeIntervalSinceNow]<-2) {
             [self countRep:accelerometerData.acceleration];
         }
         
@@ -73,6 +73,8 @@
             // if 10 seconds have past since last Rep, assume that a new set is starting
             if([setTimer timeIntervalSinceNow]<-10.0)
                {
+                   // only move to the next set, if reps where done on the previus set
+                   if((reps1>0 && reps2==0) || (reps2>0 && reps3==0))
                    sets++;
                }
         }
