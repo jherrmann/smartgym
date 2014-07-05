@@ -67,7 +67,7 @@
         insideRep = YES;
         if(setTimer)
         {
-            // if 10 seconds have past since last Rep, assume that a new set is starting
+            // if 10 seconds have passed since last rep, assume that a new set is starting
             if([setTimer timeIntervalSinceNow]<-10.0)
                {
                    sets++;
