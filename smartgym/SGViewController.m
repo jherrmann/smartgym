@@ -58,7 +58,7 @@
         [self outputAccelertionData:accelerometerData.acceleration];
         
         // analyse data for rep (only call if not a execerise change just happend
-        if (!exerciseTimer || [exerciseTimer timeIntervalSinceNow]>-1) {
+        if (!exerciseTimer || [exerciseTimer timeIntervalSinceNow]<-1) {
             [self countRep:accelerometerData.acceleration];
         }
         
