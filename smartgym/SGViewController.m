@@ -27,7 +27,8 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     [self setupAccelerometerAndGyro];
-    
+    // send the data to the server
+    [self sendSessionData:9]; // TODO: Replace with data from accelerometer
 }
 
 -(void)setupAccelerometerAndGyro
@@ -73,8 +74,6 @@
                                         [self outputRotationData:gyroData.rotationRate];
                                     }];
 
-    // send the data to the server
-    [self sendSessionData:9]; // TODO: Replace with data from accelerometer
 }
 
 - (void)countRep:(CMAcceleration)acceleration
