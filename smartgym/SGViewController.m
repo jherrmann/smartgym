@@ -122,11 +122,13 @@
 - (void)postData
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    
+    /*
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     
     NSDictionary *params = @ {@"set1":[NSNumber numberWithInteger:reps1], @"set2":[NSNumber numberWithInteger:reps2], @"set3":[NSNumber numberWithInteger:reps3]};
     
-    [manager POST:@"http://www.gymbot.me/reps.json" parameters:params
+    [manager POST:@"http://10.100.85.104" parameters:params
           success:^(AFHTTPRequestOperation *operation, id responseObject)
     {
         NSLog(@"JSON: %@", responseObject);
@@ -135,6 +137,15 @@
      ^(AFHTTPRequestOperation *operation, NSError *error) {
          NSLog(@"Error: %@", error);
      }];
+    */
+
+    [manager POST:@"http://10.100.85.104"
+       parameters:@ {@"set1":[NSNumber numberWithInteger:reps1], @"set2":[NSNumber numberWithInteger:reps2], @"set3":[NSNumber numberWithInteger:reps3]}
+          success:^(AFHTTPRequestOperation *operation, id responseObject) {
+              NSLog(@"Response: %@", responseObject);
+          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+              NSLog(@"Error: %@", error);
+          }];
 }
 
 - (void)didReceiveMemoryWarning
