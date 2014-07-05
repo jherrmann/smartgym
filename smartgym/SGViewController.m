@@ -20,6 +20,7 @@
     int reps;
     int sets;
     NSDate *setTimer;
+    NSDate *exerciseTimer;
 }
 
 - (void)viewDidLoad
@@ -56,8 +57,10 @@
         // output data
         [self outputAccelertionData:accelerometerData.acceleration];
         
-        // analyse data for rep
-        [self countRep:accelerometerData.acceleration];
+        // analyse data for rep (only call if not a execerise change just happend
+        if (!exerciseTimer || [exerciseTimer timeIntervalSinceNow]>-1) {
+            [self countRep:accelerometerData.acceleration];
+        }
         
         // analyse data if a new exercise starts and rest reps and sets
         [self checkAndStartNewExercise:accelerometerData.acceleration];
@@ -121,6 +124,7 @@
         // update gui
         self.repsCounter.text = [NSString stringWithFormat:@" %d", reps];
         self.setsCounter.text = [NSString stringWithFormat:@" %d", sets];
+        exerciseTimer = [NSDate date];
     }
 }
 
