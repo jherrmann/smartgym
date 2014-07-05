@@ -35,6 +35,7 @@ double currentMaxRotZ;
 @property (strong, nonatomic) IBOutlet UILabel *maxRotZ;
 
 @property (strong, nonatomic) CMMotionManager *motionManager;
+@property (strong, nonatomic) IBOutlet UILabel *repsCounter;
 
 - (IBAction)resetMaxValues:(id)sender;
 

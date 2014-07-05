@@ -16,6 +16,8 @@
 @implementation SGViewController
 {
     NSMutableArray *accelerometerDataArray;
+    BOOL insideRep;
+    int reps;
 }
 
 - (void)viewDidLoad
@@ -42,13 +44,30 @@
     self.motionManager.gyroUpdateInterval = .2;
     
     accelerometerDataArray = [[NSMutableArray alloc] init];
+    insideRep = NO;
+    reps = 0;
     
     // tell montion manager to start sending acceleration updates
     [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
         [self outputAccelertionData:accelerometerData.acceleration];
         
+        // analyse data for rep
+        if(!insideRep && accelerometerData.acceleration.z >= -0.9)
+        {
+            insideRep = YES;
+        }
+        else if(insideRep && accelerometerData.acceleration.z <= -0.98)
+        {
+            insideRep = NO;
+            reps++;
+            self.repsCounter.text = [NSString stringWithFormat:@" %d", reps];
+        }
+            
+        
         // add accelerometer data to array
         [accelerometerDataArray addObject:accelerometerData];
+        
+        
         NSLog(@"X: %f Y: %f Z: %f", accelerometerData.acceleration.x, accelerometerData.acceleration.y, accelerometerData.acceleration.z);
         
         if(error){
