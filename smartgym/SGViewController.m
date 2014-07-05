@@ -113,6 +113,9 @@
         setTimer = [NSDate date];
         exerciseTimer = [NSDate date];
         
+        // send the latest data to the server
+        [self postData];
+        
         // update gui
         self.reps1Counter.text = [NSString stringWithFormat:@" %d", reps1];
         self.reps2Counter.text = [NSString stringWithFormat:@" %d", reps2];
