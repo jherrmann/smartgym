@@ -23,7 +23,6 @@
     int sets;
     NSDate *setTimer; // to measure the time between a set
     NSDate *exerciseTimer;
-    NSDate *repTimer; // for measure the time between a rep
 }
 
 - (void)viewDidLoad
@@ -69,8 +68,6 @@
     if(!insideRep && acceleration.z >= -0.9)
     {
         insideRep = YES;
-        // start the rep time, so that we can ignore reps which are smaller then 0.xx seconds
-        repTimer = [NSDate date];
         
         if(setTimer)
         {
@@ -89,23 +86,21 @@
     {
         insideRep = NO;
         
-        // only count the rep if it took longer then the threshold
-       // if ([repTimer timeIntervalSinceNow]>-0.15) {
-            if (sets == 0) reps1++;
-            if (sets == 1) reps2++;
-            if (sets == 2) reps3++;
-            
-            // send the latest data to the server
-            [self postData];
-            
-            // start and reset time interval to figure out if a new set is started
-            setTimer = [NSDate date];
-            
-            // update gui
-            self.reps1Counter.text = [NSString stringWithFormat:@" %d", reps1];
-            self.reps2Counter.text = [NSString stringWithFormat:@" %d", reps2];
-            self.reps3Counter.text = [NSString stringWithFormat:@" %d", reps3];
-       // }
+        if (sets == 0) reps1++;
+        if (sets == 1) reps2++;
+        if (sets == 2) reps3++;
+        
+        // send the latest data to the server
+        [self postData];
+        
+        // start and reset time interval to figure out if a new set is started
+        setTimer = [NSDate date];
+        
+        // update gui
+        self.reps1Counter.text = [NSString stringWithFormat:@" %d", reps1];
+        self.reps2Counter.text = [NSString stringWithFormat:@" %d", reps2];
+        self.reps3Counter.text = [NSString stringWithFormat:@" %d", reps3];
+
 
     }
 }
