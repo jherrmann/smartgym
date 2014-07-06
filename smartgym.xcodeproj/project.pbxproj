@@ -41,6 +41,7 @@
 		558D86A319680F2E008B41EA /* UIRefreshControl+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 558D868119680F2E008B41EA /* UIRefreshControl+AFNetworking.m */; };
 		558D86A419680F2E008B41EA /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 558D868319680F2E008B41EA /* UIWebView+AFNetworking.m */; };
 		558D86A519680F2E008B41EA /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 558D868319680F2E008B41EA /* UIWebView+AFNetworking.m */; };
+		BC20ABEB1968AF140059C44D /* SGExercise.m in Sources */ = {isa = PBXBuildFile; fileRef = BC20ABEA1968AF140059C44D /* SGExercise.m */; };
 		BC7AEDAA1967ED0D00E9AE72 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC7AEDA91967ED0D00E9AE72 /* Foundation.framework */; };
 		BC7AEDAC1967ED0D00E9AE72 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC7AEDAB1967ED0D00E9AE72 /* CoreGraphics.framework */; };
 		BC7AEDAE1967ED0D00E9AE72 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC7AEDAD1967ED0D00E9AE72 /* UIKit.framework */; };
@@ -105,6 +106,8 @@
 		558D868119680F2E008B41EA /* UIRefreshControl+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIRefreshControl+AFNetworking.m"; sourceTree = "<group>"; };
 		558D868219680F2E008B41EA /* UIWebView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+AFNetworking.h"; sourceTree = "<group>"; };
 		558D868319680F2E008B41EA /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+AFNetworking.m"; sourceTree = "<group>"; };
+		BC20ABE91968AF140059C44D /* SGExercise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGExercise.h; sourceTree = "<group>"; };
+		BC20ABEA1968AF140059C44D /* SGExercise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGExercise.m; sourceTree = "<group>"; };
 		BC7AEDA61967ED0D00E9AE72 /* smartgym.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = smartgym.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC7AEDA91967ED0D00E9AE72 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BC7AEDAB1967ED0D00E9AE72 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -245,6 +248,8 @@
 				BC7AEDBF1967ED0D00E9AE72 /* SGViewController.m */,
 				BC7AEDC11967ED0D00E9AE72 /* Images.xcassets */,
 				BC7AEDB01967ED0D00E9AE72 /* Supporting Files */,
+				BC20ABE91968AF140059C44D /* SGExercise.h */,
+				BC20ABEA1968AF140059C44D /* SGExercise.m */,
 			);
 			path = smartgym;
 			sourceTree = "<group>";
@@ -391,6 +396,7 @@
 				558D869819680F2E008B41EA /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				558D868C19680F2E008B41EA /* AFSecurityPolicy.m in Sources */,
 				558D86A219680F2E008B41EA /* UIRefreshControl+AFNetworking.m in Sources */,
+				BC20ABEB1968AF140059C44D /* SGExercise.m in Sources */,
 				558D86A419680F2E008B41EA /* UIWebView+AFNetworking.m in Sources */,
 				558D868819680F2E008B41EA /* AFHTTPSessionManager.m in Sources */,
 				558D869A19680F2E008B41EA /* UIAlertView+AFNetworking.m in Sources */,

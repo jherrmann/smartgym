@@ -21,8 +21,9 @@
     int reps2;
     int reps3;
     int sets;
-    NSDate *setTimer;
+    NSDate *setTimer; // to measure the time between a set
     NSDate *exerciseTimer;
+    NSDate *repTimer; // for measure the time between a rep
 }
 
 - (void)viewDidLoad
@@ -64,10 +65,13 @@
 
 - (void)countRep:(CMAcceleration)acceleration
 {
-    // if over treshold then rep starts
+    // if acceleration is over threshold then rep starts
     if(!insideRep && acceleration.z >= -0.9)
     {
         insideRep = YES;
+        // start the rep time, so that we can ignore reps which are smaller then 0.xx seconds
+        repTimer = [NSDate date];
+        
         if(setTimer)
         {
             // if 10 seconds have passed since last rep, assume that a new set is starting
@@ -80,24 +84,29 @@
         }
 
     }
-    // if under treshold rep ends
+    // if acceleration is under threshold rep ends
     else if(insideRep && acceleration.z <= -0.98)
     {
         insideRep = NO;
-        if (sets == 0) reps1++;
-        if (sets == 1) reps2++;
-        if (sets == 2) reps3++;
         
-        // send the latest data to the server
-        [self postData];
-        
-        // start and reset time interval to figure out if a new set is started
-        setTimer = [NSDate date];
-        
-        // update gui
-        self.reps1Counter.text = [NSString stringWithFormat:@" %d", reps1];
-        self.reps2Counter.text = [NSString stringWithFormat:@" %d", reps2];
-        self.reps3Counter.text = [NSString stringWithFormat:@" %d", reps3];
+        // only count the rep if it took longer then the threshold
+        if ([repTimer timeIntervalSinceNow]>-0.3) {
+            if (sets == 0) reps1++;
+            if (sets == 1) reps2++;
+            if (sets == 2) reps3++;
+            
+            // send the latest data to the server
+            [self postData];
+            
+            // start and reset time interval to figure out if a new set is started
+            setTimer = [NSDate date];
+            
+            // update gui
+            self.reps1Counter.text = [NSString stringWithFormat:@" %d", reps1];
+            self.reps2Counter.text = [NSString stringWithFormat:@" %d", reps2];
+            self.reps3Counter.text = [NSString stringWithFormat:@" %d", reps3];
+        }
+
     }
 }
 
@@ -143,7 +152,7 @@
      }];
     */
 
-    [manager POST:@"http://10.100.85.104"
+    [manager POST:@"http://10.100.85.142"
        parameters:@ {@"set1":[NSNumber numberWithInteger:reps1], @"set2":[NSNumber numberWithInteger:reps2], @"set3":[NSNumber numberWithInteger:reps3]}
           success:^(AFHTTPRequestOperation *operation, id responseObject) {
               NSLog(@"Response: %@", responseObject);
