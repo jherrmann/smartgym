@@ -90,7 +90,7 @@
         insideRep = NO;
         
         // only count the rep if it took longer then the threshold
-        if ([repTimer timeIntervalSinceNow]>-0.3) {
+       // if ([repTimer timeIntervalSinceNow]>-0.15) {
             if (sets == 0) reps1++;
             if (sets == 1) reps2++;
             if (sets == 2) reps3++;
@@ -105,7 +105,7 @@
             self.reps1Counter.text = [NSString stringWithFormat:@" %d", reps1];
             self.reps2Counter.text = [NSString stringWithFormat:@" %d", reps2];
             self.reps3Counter.text = [NSString stringWithFormat:@" %d", reps3];
-        }
+       // }
 
     }
 }
