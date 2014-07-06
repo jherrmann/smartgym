@@ -23,6 +23,7 @@
     int sets;
     NSDate *setTimer; // to measure the time between a set
     NSDate *exerciseTimer;
+    double rollingZ; // for high pass filter
 }
 
 - (void)viewDidLoad
@@ -48,9 +49,20 @@
     // tell motion manager to start sending acceleration updates
     [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
         
+        // add a high pass filter to prevent quick changes in acceleration from counting reps.
+        if(rollingZ)
+        {
+            rollingZ = (accelerometerData.acceleration.z * 0.3) + (rollingZ * (1.0 - 0.3));
+        }
+        else
+        {
+            rollingZ = accelerometerData.acceleration.z;
+        }
+        NSLog(@"Zacc: %f",rollingZ);
+        
         // analyse data for rep (only call if NO execerise change just happend
         if (!exerciseTimer || [exerciseTimer timeIntervalSinceNow]<-2) {
-            [self countRep:accelerometerData.acceleration];
+            [self countRep:rollingZ];
         }
         
         // analyse data if a new exercise starts and rest reps and sets
@@ -62,10 +74,10 @@
     }];
 }
 
-- (void)countRep:(CMAcceleration)acceleration
+- (void)countRep:(double)zAcceleration
 {
     // if acceleration is over threshold then rep starts
-    if(!insideRep && acceleration.z >= -0.9)
+    if(!insideRep && zAcceleration >= -0.9)
     {
         insideRep = YES;
         
@@ -82,7 +94,7 @@
 
     }
     // if acceleration is under threshold rep ends
-    else if(insideRep && acceleration.z <= -0.98)
+    else if(insideRep && zAcceleration <= -0.98)
     {
         insideRep = NO;
         
@@ -124,6 +136,19 @@
         self.reps1Counter.text = [NSString stringWithFormat:@" %d", reps1];
         self.reps2Counter.text = [NSString stringWithFormat:@" %d", reps2];
         self.reps3Counter.text = [NSString stringWithFormat:@" %d", reps3];
+    }
+}
+
+#define zFilteringFactor 0.3
+- (void)highPassFilter:(CMAcceleration)acceleration
+{
+    if(rollingZ)
+    {
+        rollingZ = (acceleration.z * zFilteringFactor) + (rollingZ * (1.0 - zFilteringFactor));
+    }
+    else
+    {
+        rollingZ = acceleration.z;
     }
 }
 
